@@ -14,7 +14,12 @@ A Pokédex app on PokeAPI. You can scroll through all Pokémon, search them, see
 - Shared UI: `ThemedText`, `ThemedView`, `ErrorView` in `src/components/`.
 - Tabs: `src/components/app-tabs.tsx` with `NativeTabs`.
 - Database: `expo-sqlite` is installed. The favorites feature creates its table in `src/services/`.
-- The Pokémons tab is a placeholder until the first issue replaces it.
+
+**Built in the first issues** (reuse it):
+
+- PokeAPI service: `src/services/pokemon.ts`. It checks every response with a type guard (like `isPokemonListResponse`) instead of an `as` cast, and turns API entries into our `Pokemon` shape with `toPokemon` (id from the URL, name with a capital, sprite URL). New PokeAPI calls go in this file and work the same way.
+- Pokémon cards and grid: `PokemonCard` and `PokemonGrid` in `src/components/`. Reuse them for every list of Pokémon (search results, favorites).
+- Search: `filterPokemon` and `usePokemonSearch` in `src/hooks/use-pokemon-search.ts`, the names of all Pokémon loaded once.
 
 ## Folders
 
@@ -43,6 +48,8 @@ A screen renders, a hook gets data, a service talks to the API or the database. 
 - Every screen needs a **loading** state and an **error** state (and an **empty** state, `data.length === 0`, when a list can be empty).
 - Hooks return `useQuery` / `useMutation` directly, so TypeScript knows `data` exists after the loading and error checks.
 - Query keys for favorites must start with `['favorites', ...]`, because invalidating `['favorites']` refreshes every key that starts with `'favorites'`.
+- Every query has its own first word in the key, so they never clash: `['pokemonList']`, `['pokemonSearch']`, `['pokemon', id]` with id as a number.
+- Shape the data once in the service (capitals, units, our own types). Screens and components show it as it comes.
 - No `any`, no `as` casts (only `as const` is fine), no `@ts-ignore`.
 - Imports use `@/` instead of relative paths like `../../hooks/...`.
 - Install packages with `npx expo install`.
@@ -55,6 +62,8 @@ A screen renders, a hook gets data, a service talks to the API or the database. 
 - Check the Figma screen for every component you build: layout, colours, sizes and where each element sits. New colours go in `theme.ts` with a light and a dark value.
 - New route files: `tsc` only knows them after `npx expo start` has run once. Do not change working code to fix that error.
 - Lists that load more while scrolling: only load the next page when there is one and none is loading yet, and never while a search is active.
+- Every scrolling list leaves room at the bottom for the tab bar (`BottomTabInset`), so the last row is not hidden.
+- Lists that can be tapped while the keyboard is open use `keyboardShouldPersistTaps="handled"`, so one tap is enough. Search fields turn off `autoCorrect` and `autoCapitalize`.
 - Never add a package without asking me first, also not for fonts.
 - Never force-push. My git history is part of my hand-in.
 

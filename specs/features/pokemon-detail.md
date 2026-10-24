@@ -17,6 +17,7 @@ Tap a Pokémon to see who it is and how strong it is: its types, its info and it
 ## Acceptance Criteria
 
 - [ ] The top shows "‹ Vorige" (goes back), a heart, the name, the number in grey (`#001`) and a chip per type with a dot in the type colour.
+- [ ] "‹ Vorige" is always visible. It goes back to the previous screen, or to the Pokémons tab when there is no previous screen (for example after a reload on the detail screen).
 - [ ] Below that the official artwork, large.
 - [ ] Three tabs: About, Stats, Evolution. The active tab is underlined in purple. Tapping a tab switches at once, without loading again.
 - [ ] About shows Name, ID, Base (XP), Weight (kg), Height (m), Types and Abilities (not the hidden ability, like the Figma). Bulbasaur: 64 XP, 6.9 kg, 0.7 m, Grass, Poison, Overgrow.
@@ -29,5 +30,6 @@ Tap a Pokémon to see who it is and how strong it is: its types, its info and it
 
 - What the heart does: that is in [favorites](./favorites.md).
 - The Evolution tab: that is in [evolution](./evolution.md).
+- The "Compare with another Pokémon" button in the Stats tab: that is in [compare](./compare.md).
 - Moves, locations, Pokédex text or cries.
 - Swiping between tabs.
