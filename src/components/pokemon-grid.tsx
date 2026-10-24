@@ -30,6 +30,7 @@ export function PokemonGrid({
 }: PokemonGridProps) {
   const theme = useTheme();
 
+  // FlatList only renders the cards on screen, so long lists stay fast
   return (
     <FlatList
       columnWrapperStyle={styles.row}
@@ -54,6 +55,7 @@ export function PokemonGrid({
       }
       numColumns={2}
       onEndReached={() => {
+        // Never load twice, and never retry a failed page in a loop
         if (hasNextPage && !isFetching && !isFetchingNextPage && !isFetchNextPageError) {
           onLoadMore();
         }
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: Spacing.three,
+    // Room for the tab bar, so the last row is not hidden
     paddingBottom: BottomTabInset + Spacing.four,
     gap: Spacing.three,
   },

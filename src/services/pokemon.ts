@@ -18,11 +18,13 @@ export type Pokemon = {
   spriteUrl: string;
 };
 
+// nextOffset is null on the last page
 export type PokemonPage = {
   pokemon: Pokemon[];
   nextOffset: number | null;
 };
 
+// Check the shape of API data instead of trusting it with an `as` cast
 function isPokemonListEntry(value: unknown): value is PokemonListEntry {
   return (
     typeof value === 'object' &&
@@ -46,6 +48,7 @@ function isPokemonListResponse(value: unknown): value is PokemonListResponse {
   );
 }
 
+// The list has no id, so take it from the URL (.../pokemon/25/)
 function getPokemonId(url: string) {
   const match = url.match(/\/pokemon\/(\d+)\/?$/);
   const id = match ? Number(match[1]) : Number.NaN;
@@ -57,9 +60,11 @@ function getPokemonId(url: string) {
   return id;
 }
 
+// Loads 20 Pokémon from offset and turns them into our own shape
 export async function getPokemonPage(offset: number): Promise<PokemonPage> {
   const response = await fetch(`${POKEMON_API_URL}?limit=20&offset=${offset}`);
 
+  // Throwing shows the error state
   if (!response.ok) {
     throw new Error(`Unable to load Pokémon (${response.status}).`);
   }
@@ -76,12 +81,14 @@ export async function getPokemonPage(offset: number): Promise<PokemonPage> {
     return {
       id,
       name: `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+      // Built from the id, so no extra request per card
       spriteUrl: `${POKEMON_SPRITE_URL}/${id}.png`,
     };
   });
 
   return {
     pokemon,
+    // PokeAPI's next is null on the last page
     nextOffset: body.next === null ? null : offset + pokemon.length,
   };
 }

@@ -25,6 +25,7 @@ export default function HomeScreen() {
     refetch,
   } = usePokemonList();
 
+  // Pass the name along, so the next screen needs no extra request
   function openPokemon(pokemon: Pokemon) {
     router.push({
       pathname: '/pokemon/[id]',
@@ -32,6 +33,7 @@ export default function HomeScreen() {
     });
   }
 
+  // Full error screen only when nothing is loaded yet, later errors show in the footer
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ThemedText style={[styles.title, { color: theme.midnight }]}>All Pokémon</ThemedText>

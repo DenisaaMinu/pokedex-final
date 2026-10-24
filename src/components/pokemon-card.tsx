@@ -14,6 +14,7 @@ type PokemonCardProps = {
 export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
   const theme = useTheme();
 
+  // Shadow on the outer Pressable, because overflow: 'hidden' would cut it off
   return (
     <Pressable
       accessibilityLabel={`${pokemon.name}, number ${pokemon.id}`}
@@ -55,6 +56,7 @@ export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
             style={[styles.name, { color: theme.text, fontFamily: RubikFonts.medium }]}>
             {pokemon.name}
           </ThemedText>
+          {/* Disabled until the favorites issue adds its menu */}
           <Pressable
             accessibilityLabel={`More options for ${pokemon.name}`}
             accessibilityRole="button"

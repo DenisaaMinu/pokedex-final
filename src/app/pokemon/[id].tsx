@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/themed-text';
 import { RubikFonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
+// Temporary screen until the real detail screen (issue #3)
 export default function PokemonPlaceholderScreen() {
   const theme = useTheme();
   const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
