@@ -3,6 +3,7 @@ import {
   FlatList,
   StyleSheet,
   View,
+  type ScrollViewProps,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -27,6 +28,7 @@ type PokemonGridProps = {
   emptyMessage?: string;
   isHidden?: boolean;
   style?: StyleProp<ViewStyle>;
+  keyboardShouldPersistTaps?: ScrollViewProps['keyboardShouldPersistTaps'];
 };
 
 export function PokemonGrid({
@@ -42,6 +44,7 @@ export function PokemonGrid({
   emptyMessage = 'No Pokémon found.',
   isHidden = false,
   style,
+  keyboardShouldPersistTaps,
 }: PokemonGridProps) {
   const theme = useTheme();
 
@@ -53,6 +56,7 @@ export function PokemonGrid({
       contentContainerStyle={styles.content}
       data={pokemon}
       importantForAccessibility={isHidden ? 'no-hide-descendants' : 'auto'}
+      keyboardShouldPersistTaps={keyboardShouldPersistTaps}
       keyExtractor={(item) => String(item.id)}
       ListEmptyComponent={
         <View style={styles.empty}>

@@ -50,7 +50,9 @@ export default function HomeScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
         <PokemonSearchBar onChangeText={setSearchText} value={searchText} />
-        <ThemedText style={[styles.title, { color: theme.midnight }]}>All Pokémon</ThemedText>
+        {!isSearching ? (
+          <ThemedText style={[styles.title, { color: theme.midnight }]}>All Pokémon</ThemedText>
+        ) : null}
       </View>
       <View style={styles.grids}>
         {isPending ? (
@@ -111,6 +113,7 @@ export default function HomeScreen() {
           ) : searchablePokemon ? (
             <PokemonGrid
               emptyMessage="No Pokémon found"
+              keyboardShouldPersistTaps="handled"
               onSelectPokemon={openPokemon}
               pokemon={filterPokemon(searchablePokemon, searchText)}
             />

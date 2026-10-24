@@ -22,6 +22,8 @@ export function PokemonSearchBar({ value, onChangeText }: PokemonSearchBarProps)
         tintColor={theme.textSecondary}
       />
       <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
         accessibilityLabel="Search for Pokémon"
         onChangeText={onChangeText}
         placeholder="Search for Pokémon.."
