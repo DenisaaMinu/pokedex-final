@@ -60,6 +60,35 @@ function getPokemonId(url: string) {
   return id;
 }
 
+// Turns an API entry into our own shape
+function toPokemon({ name, url }: PokemonListEntry): Pokemon {
+  const id = getPokemonId(url);
+
+  return {
+    id,
+    name: `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+    // Built from the id, so no extra request per card
+    spriteUrl: `${POKEMON_SPRITE_URL}/${id}.png`,
+  };
+}
+
+// All names and numbers in one request, for search
+export async function getPokemonNames(): Promise<Pokemon[]> {
+  const response = await fetch(`${POKEMON_API_URL}?limit=2000`);
+
+  if (!response.ok) {
+    throw new Error(`Unable to load Pokémon search (${response.status}).`);
+  }
+
+  const body: unknown = await response.json();
+
+  if (!isPokemonListResponse(body)) {
+    throw new Error('The Pokémon search response was invalid.');
+  }
+
+  return body.results.map(toPokemon);
+}
+
 // Loads 20 Pokémon from offset and turns them into our own shape
 export async function getPokemonPage(offset: number): Promise<PokemonPage> {
   const response = await fetch(`${POKEMON_API_URL}?limit=20&offset=${offset}`);
@@ -75,16 +104,7 @@ export async function getPokemonPage(offset: number): Promise<PokemonPage> {
     throw new Error('The Pokémon list response was invalid.');
   }
 
-  const pokemon = body.results.map(({ name, url }) => {
-    const id = getPokemonId(url);
-
-    return {
-      id,
-      name: `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
-      // Built from the id, so no extra request per card
-      spriteUrl: `${POKEMON_SPRITE_URL}/${id}.png`,
-    };
-  });
+  const pokemon = body.results.map(toPokemon);
 
   return {
     pokemon,

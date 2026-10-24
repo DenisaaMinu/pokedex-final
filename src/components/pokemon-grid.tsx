@@ -1,4 +1,11 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 import ErrorView from '@/components/error-view';
 import { PokemonCard } from '@/components/pokemon-card';
@@ -9,41 +16,51 @@ import type { Pokemon } from '@/services/pokemon';
 
 type PokemonGridProps = {
   pokemon: Pokemon[];
-  hasNextPage: boolean;
-  isFetching: boolean;
-  isFetchingNextPage: boolean;
-  isFetchNextPageError: boolean;
-  onLoadMore: () => void;
-  onRetryLoadMore: () => void;
+  hasNextPage?: boolean;
+  isFetching?: boolean;
+  isFetchingNextPage?: boolean;
+  isFetchNextPageError?: boolean;
+  onLoadMore?: () => void;
+  onRetryLoadMore?: () => void;
   onSelectPokemon: (pokemon: Pokemon) => void;
+  onEndReachedEnabled?: boolean;
+  emptyMessage?: string;
+  isHidden?: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function PokemonGrid({
   pokemon,
-  hasNextPage,
-  isFetching,
-  isFetchingNextPage,
-  isFetchNextPageError,
+  hasNextPage = false,
+  isFetching = false,
+  isFetchingNextPage = false,
+  isFetchNextPageError = false,
   onLoadMore,
   onRetryLoadMore,
   onSelectPokemon,
+  onEndReachedEnabled = true,
+  emptyMessage = 'No Pokémon found.',
+  isHidden = false,
+  style,
 }: PokemonGridProps) {
   const theme = useTheme();
 
   // FlatList only renders the cards on screen, so long lists stay fast
   return (
     <FlatList
+      accessibilityElementsHidden={isHidden}
       columnWrapperStyle={styles.row}
       contentContainerStyle={styles.content}
       data={pokemon}
+      importantForAccessibility={isHidden ? 'no-hide-descendants' : 'auto'}
       keyExtractor={(item) => String(item.id)}
       ListEmptyComponent={
         <View style={styles.empty}>
-          <ThemedText>No Pokémon found.</ThemedText>
+          <ThemedText>{emptyMessage}</ThemedText>
         </View>
       }
       ListFooterComponent={
-        isFetchNextPageError ? (
+        isFetchNextPageError && onRetryLoadMore ? (
           <View style={styles.footer}>
             <ErrorView message="Unable to load more Pokémon." onRetry={onRetryLoadMore} />
           </View>
@@ -56,14 +73,23 @@ export function PokemonGrid({
       numColumns={2}
       onEndReached={() => {
         // Never load twice, and never retry a failed page in a loop
-        if (hasNextPage && !isFetching && !isFetchingNextPage && !isFetchNextPageError) {
+        if (
+          onEndReachedEnabled &&
+          onLoadMore &&
+          hasNextPage &&
+          !isFetching &&
+          !isFetchingNextPage &&
+          !isFetchNextPageError
+        ) {
           onLoadMore();
         }
       }}
       onEndReachedThreshold={0.5}
+      pointerEvents={isHidden ? 'none' : 'auto'}
       renderItem={({ item }) => (
         <PokemonCard onPress={() => onSelectPokemon(item)} pokemon={item} />
       )}
+      style={style}
       windowSize={5}
     />
   );
