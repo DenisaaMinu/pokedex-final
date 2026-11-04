@@ -28,6 +28,7 @@ export type PokemonPage = {
 export type PokemonDetail = {
   id: number;
   name: string;
+  spriteUrl: string;
   artworkUrl: string;
   baseExperience: number | null;
   heightM: number;
@@ -206,6 +207,7 @@ function toPokemonDetail(response: PokemonDetailResponse): PokemonDetail {
   return {
     id: response.id,
     name: toDisplayName(response.name),
+    spriteUrl: `${POKEMON_SPRITE_URL}/${response.id}.png`,
     artworkUrl:
       response.sprites.other['official-artwork'].front_default ??
       `${POKEMON_OFFICIAL_ARTWORK_URL}/${response.id}.png`,

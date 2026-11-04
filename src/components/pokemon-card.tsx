@@ -9,9 +9,10 @@ import type { Pokemon } from '@/services/pokemon';
 type PokemonCardProps = {
   pokemon: Pokemon;
   onPress: () => void;
+  onOpenOptions: () => void;
 };
 
-export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
+export function PokemonCard({ pokemon, onPress, onOpenOptions }: PokemonCardProps) {
   const theme = useTheme();
 
   // Shadow on the outer Pressable, because overflow: 'hidden' would cut it off
@@ -56,11 +57,13 @@ export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
             style={[styles.name, { color: theme.text, fontFamily: RubikFonts.medium }]}>
             {pokemon.name}
           </ThemedText>
-          {/* Disabled until the favorites issue adds its menu */}
           <Pressable
             accessibilityLabel={`More options for ${pokemon.name}`}
             accessibilityRole="button"
-            disabled
+            onPress={(event) => {
+              event.stopPropagation();
+              onOpenOptions();
+            }}
             style={styles.moreButton}>
             <ThemedText style={[styles.moreText, { color: theme.text }]}>⋮</ThemedText>
           </Pressable>

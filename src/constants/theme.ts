@@ -17,6 +17,7 @@ export const Colors = {
     card: '#FFFFFF',
     badge: '#2E7D5B',
     badgeText: '#FFFFFF',
+    favoriteRed: '#D6284A',
     // Colours from the Figma
     midnight: '#0E0940',
     purple: '#5631E8',
@@ -27,6 +28,7 @@ export const Colors = {
     detailMuted: 'rgba(14, 9, 64, 0.65)',
     detailStatTrack: '#DBDAE6',
     cardShadow: 'rgba(48, 55, 115, 0.15)',
+    modalBackdrop: '#0E0940',
     typeNormal: '#A8A77A',
     typeFire: '#EE8130',
     typeWater: '#6390F0',
@@ -55,6 +57,7 @@ export const Colors = {
     card: '#212225',
     badge: '#2E7D5B',
     badgeText: '#FFFFFF',
+    favoriteRed: '#FF5C75',
     // The Figma has no dark mode, so these are my own dark versions
     midnight: '#FFFFFF',
     purple: '#5631E8',
@@ -65,6 +68,7 @@ export const Colors = {
     detailMuted: 'rgba(255, 255, 255, 0.65)',
     detailStatTrack: '#464653',
     cardShadow: 'rgba(48, 55, 115, 0.15)',
+    modalBackdrop: '#000000',
     typeNormal: '#A8A77A',
     typeFire: '#EE8130',
     typeWater: '#6390F0',

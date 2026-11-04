@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ErrorView from '@/components/error-view';
@@ -11,6 +11,7 @@ import { PokemonStatRow } from '@/components/pokemon-stat-row';
 import { PokemonTypeChip } from '@/components/pokemon-type-chip';
 import { ThemedText } from '@/components/themed-text';
 import { RubikFonts, Spacing } from '@/constants/theme';
+import { useAddFavorite, useIsFavorite, useRemoveFavorite } from '@/hooks/use-favorites';
 import { usePokemon } from '@/hooks/use-pokemon';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -19,6 +20,21 @@ export default function PokemonDetailScreen() {
   const { id: idParam } = useLocalSearchParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<PokemonDetailTab>('About');
   const { data, error, isError, isPending, refetch } = usePokemon(Number(idParam));
+  const favoriteQuery = useIsFavorite(data?.id ?? 0);
+  const addFavorite = useAddFavorite();
+  const removeFavorite = useRemoveFavorite();
+
+  function toggleFavorite() {
+    if (!data) {
+      return;
+    }
+
+    if (favoriteQuery.data) {
+      removeFavorite.mutate(data.id);
+    } else {
+      addFavorite.mutate({ id: data.id, name: data.name, spriteUrl: data.spriteUrl });
+    }
+  }
 
   return (
     <>
@@ -57,11 +73,21 @@ export default function PokemonDetailScreen() {
                     </ThemedText>
                   </Pressable>
                   <Pressable
-                    accessibilityLabel={`Favorite ${data.name}`}
+                    accessibilityLabel={
+                      favoriteQuery.data
+                        ? `Remove ${data.name} from favorites`
+                        : `Add ${data.name} to favorites`
+                    }
                     accessibilityRole="button"
-                    disabled
+                    onPress={toggleFavorite}
                     style={styles.heartButton}>
-                    <ThemedText style={[styles.heart, { color: theme.midnight }]}>♡</ThemedText>
+                    <ThemedText
+                      style={[
+                        styles.heart,
+                        { color: favoriteQuery.data ? theme.favoriteRed : theme.midnight },
+                      ]}>
+                      {favoriteQuery.data ? '♥' : '♡'}
+                    </ThemedText>
                   </Pressable>
                 </View>
                 <View style={styles.titleRow}>

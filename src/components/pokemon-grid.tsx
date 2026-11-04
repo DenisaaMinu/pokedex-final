@@ -1,15 +1,17 @@
+import { useState } from 'react';
 import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  View,
-  type ScrollViewProps,
-  type StyleProp,
-  type ViewStyle,
+    ActivityIndicator,
+    FlatList,
+    StyleSheet,
+    View,
+    type ScrollViewProps,
+    type StyleProp,
+    type ViewStyle,
 } from 'react-native';
 
 import ErrorView from '@/components/error-view';
 import { PokemonCard } from '@/components/pokemon-card';
+import { PokemonOptionsSheet } from '@/components/pokemon-options-sheet';
 import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -47,55 +49,67 @@ export function PokemonGrid({
   keyboardShouldPersistTaps,
 }: PokemonGridProps) {
   const theme = useTheme();
+  const [optionsPokemon, setOptionsPokemon] = useState<Pokemon | null>(null);
 
   // FlatList only renders the cards on screen, so long lists stay fast
   return (
-    <FlatList
-      accessibilityElementsHidden={isHidden}
-      columnWrapperStyle={styles.row}
-      contentContainerStyle={styles.content}
-      data={pokemon}
-      importantForAccessibility={isHidden ? 'no-hide-descendants' : 'auto'}
-      keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-      keyExtractor={(item) => String(item.id)}
-      ListEmptyComponent={
-        <View style={styles.empty}>
-          <ThemedText>{emptyMessage}</ThemedText>
-        </View>
-      }
-      ListFooterComponent={
-        isFetchNextPageError && onRetryLoadMore ? (
-          <View style={styles.footer}>
-            <ErrorView message="Unable to load more Pokémon." onRetry={onRetryLoadMore} />
+    <>
+      <FlatList
+        accessibilityElementsHidden={isHidden}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.content}
+        data={pokemon}
+        importantForAccessibility={isHidden ? 'no-hide-descendants' : 'auto'}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        keyExtractor={(item) => String(item.id)}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <ThemedText>{emptyMessage}</ThemedText>
           </View>
-        ) : isFetchingNextPage ? (
-          <View style={styles.footer}>
-            <ActivityIndicator color={theme.purple} size="small" />
-          </View>
-        ) : undefined
-      }
-      numColumns={2}
-      onEndReached={() => {
-        // Never load twice, and never retry a failed page in a loop
-        if (
-          onEndReachedEnabled &&
-          onLoadMore &&
-          hasNextPage &&
-          !isFetching &&
-          !isFetchingNextPage &&
-          !isFetchNextPageError
-        ) {
-          onLoadMore();
         }
-      }}
-      onEndReachedThreshold={0.5}
-      pointerEvents={isHidden ? 'none' : 'auto'}
-      renderItem={({ item }) => (
-        <PokemonCard onPress={() => onSelectPokemon(item)} pokemon={item} />
-      )}
-      style={style}
-      windowSize={5}
-    />
+        ListFooterComponent={
+          isFetchNextPageError && onRetryLoadMore ? (
+            <View style={styles.footer}>
+              <ErrorView message="Unable to load more Pokémon." onRetry={onRetryLoadMore} />
+            </View>
+          ) : isFetchingNextPage ? (
+            <View style={styles.footer}>
+              <ActivityIndicator color={theme.purple} size="small" />
+            </View>
+          ) : undefined
+        }
+        numColumns={2}
+        onEndReached={() => {
+          // Never load twice, and never retry a failed page in a loop
+          if (
+            onEndReachedEnabled &&
+            onLoadMore &&
+            hasNextPage &&
+            !isFetching &&
+            !isFetchingNextPage &&
+            !isFetchNextPageError
+          ) {
+            onLoadMore();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        pointerEvents={isHidden ? 'none' : 'auto'}
+        renderItem={({ item }) => (
+          <PokemonCard
+            onOpenOptions={() => setOptionsPokemon(item)}
+            onPress={() => onSelectPokemon(item)}
+            pokemon={item}
+          />
+        )}
+        style={style}
+        windowSize={5}
+      />
+      <PokemonOptionsSheet
+        onClose={() => setOptionsPokemon(null)}
+        onOpenPokemon={onSelectPokemon}
+        pokemon={optionsPokemon}
+      />
+    </>
   );
 }
 

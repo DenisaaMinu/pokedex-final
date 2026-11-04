@@ -1,4 +1,4 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { NativeTabs } from 'expo-router/native-tabs';
 import { useColorScheme } from 'react-native';
 
 import { Colors } from '@/constants/theme';
@@ -11,13 +11,23 @@ export default function AppTabs() {
   return (
     <NativeTabs
       backgroundColor={colors.background}
+      blurEffect="none"
+      disableTransparentOnScrollEdge
       indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
+      iconColor={{ default: colors.midnight, selected: colors.purple }}
+      labelStyle={{ default: { color: colors.midnight }, selected: { color: colors.purple } }}>
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Pokémons</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={require('@/assets/images/tabIcons/pokeball.png')}
           renderingMode="template"
+        />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="favorites">
+        <NativeTabs.Trigger.Label>Favorites</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          md={{ default: 'favorite_border', selected: 'favorite' }}
+          sf={{ default: 'heart', selected: 'heart.fill' }}
         />
       </NativeTabs.Trigger>
     </NativeTabs>
