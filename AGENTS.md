@@ -20,6 +20,7 @@ A Pokédex app on PokeAPI. You can scroll through all Pokémon, search them, see
 - PokeAPI service: `src/services/pokemon.ts`. It checks every response with a type guard (like `isPokemonListResponse`) instead of an `as` cast, and turns API entries into our `Pokemon` shape with `toPokemon` (id from the URL, name with a capital, sprite URL). New PokeAPI calls go in this file and work the same way.
 - Pokémon cards and grid: `PokemonCard` and `PokemonGrid` in `src/components/`. Reuse them for every list of Pokémon (search results, favorites).
 - Search: `filterPokemon` and `usePokemonSearch` in `src/hooks/use-pokemon-search.ts`, the names of all Pokémon loaded once.
+- Favorites: the SQLite database is in `src/services/favorites-db.ts`; its TanStack Query hooks are in `src/hooks/use-favorites.ts`.
 
 ## Folders
 
@@ -66,6 +67,8 @@ A screen renders, a hook gets data, a service talks to the API or the database. 
 - Lists that load more while scrolling: only load the next page when there is one and none is loading yet, and never while a search is active.
 - Every scrolling list leaves room at the bottom for the tab bar (`BottomTabInset`), so the last row is not hidden.
 - Lists that can be tapped while the keyboard is open use `keyboardShouldPersistTaps="handled"`, so one tap is enough. Search fields turn off `autoCorrect` and `autoCapitalize`.
+- Before you reuse an image from `assets/`, open it and check it shows what the spec asks for (the old `home.png` is a house, not a Pokéball).
+- When you save a Pokémon somewhere, save the same fields the list uses (`spriteUrl`, not `artworkUrl`), so it looks the same everywhere.
 - Never add a package without asking me first, also not for fonts.
 - Never force-push. My git history is part of my hand-in.
 
