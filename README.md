@@ -1,56 +1,34 @@
-# Welcome to your Expo app 👋
+# Pokédex
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A Pokédex app on [PokeAPI](https://pokeapi.co/). Scroll through all Pokémon, search them, see their details and evolution chain, save favorites and compare two Pokémon. Design: the Figma "Pokémon Code Challenge" (phone screens), font Rubik.
 
-## Get started
+**Stack:** Expo (Expo Go), Expo Router, TypeScript, TanStack Query, expo-sqlite.
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Run it
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Scan the QR code with Expo Go. No `.env` or key needed: PokeAPI is public.
 
-### Other setup steps
+## Features
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+1. Pokémon list: 20 at a time while you scroll
+2. Search: by name or number, also Pokémon not loaded yet
+3. Pokémon detail: About, Stats and Evolution tabs
+4. Evolution chain: tap through to every family member
+5. Favorites: heart or ⋮ menu, saved in SQLite, Share in the ⋮ menu
+6. Compare: two Pokémon side by side, who wins per stat
 
-## Learn more
+## Hand-in
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Part | Where |
+|---|---|
+| What the app is | [`specs/product.md`](specs/product.md) |
+| One file per feature | [`specs/features/`](specs/features/) |
+| Instructions for the agent | [`AGENTS.md`](AGENTS.md) |
+| Issues with the agent's plan | [GitHub Issues](https://github.com/DenisaaMinu/pokedex-final/issues?q=is%3Aissue) #1 to #6 |
+| Chats with the agent | [`chat-history/`](chat-history/) |
+| The three questions | [`docs/explanation.md`](docs/explanation.md) |
