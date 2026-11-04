@@ -109,6 +109,19 @@ export const PokemonTypeColorKey = {
   fairy: 'typeFairy',
 } as const;
 
+function isThemeColor(value: string): value is ThemeColor {
+  return (
+    Object.prototype.hasOwnProperty.call(Colors.light, value) &&
+    Object.prototype.hasOwnProperty.call(Colors.dark, value)
+  );
+}
+
+export function getPokemonTypeColorKey(type: string): ThemeColor | undefined {
+  const entry = Object.entries(PokemonTypeColorKey).find(([name]) => name === type);
+
+  return entry && isThemeColor(entry[1]) ? entry[1] : undefined;
+}
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
@@ -155,6 +168,9 @@ export const Spacing = {
   // In the Figma the artwork hangs 50px into the white part, and the tabs start 24px below it
   detailArtworkOverlap: 50,
   detailBodyTop: 74,
+  detailHeroHeight: 440,
+  detailArtworkSize: 240,
+  detailArtworkTop: 210,
 } as const;
 
 export const Radius = {
