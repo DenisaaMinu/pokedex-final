@@ -4,7 +4,7 @@ A Pokédex app on PokeAPI. You can scroll through all Pokémon, search them, see
 
 **Stack:** Expo (runs in Expo Go), Expo Router, TypeScript, TanStack Query, expo-sqlite
 
-**What to build:** read `specs/product.md` and the feature file in `specs/features/` for the issue I give you. The design is the Figma "Pokémon Code Challenge" (phone screens only). The font is Rubik.
+**What to build:** read `specs/product.md` and the feature file in `specs/features/` for the issue I give you. The design is the Figma "Pokémon Code Challenge" (phone screens only): https://www.figma.com/design/dsgGXcu5WELIvRW90m5308/Pok%C3%A9mon-Code-Challenge?node-id=1-2. The font is Rubik.
 
 **Setup from my course app** (reuse it, do not build it again):
 
@@ -36,6 +36,8 @@ A screen renders, a hook gets data, a service talks to the API or the database. 
 
 - One issue per chat.
 - First a plan, no code. Post it as a comment on the issue with `gh issue comment <number>`, with a `- [ ]` task list. Wait until I say "go".
+- Post the plan comment once. To change it or tick tasks, use `gh issue comment <number> --edit-last`, never a second comment.
+- When I say "go", build every task of the plan in one go. Do not stop after the first tasks.
 - While building, tick off the tasks on the issue.
 - On Windows, post or edit issue comments with `--body-file` and a UTF-8 file. Not with `--body "...\n..."` (the `\n` stays as text) and not with a PowerShell pipe (it turns `é` into `?`).
 - I do the commits myself. Do not commit or push.
