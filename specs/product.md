@@ -33,19 +33,19 @@ Look up a Pokémon and see its details: types, stats and abilities.
 
 ## Technical core
 
-- [ ] Runs in Expo Go
-- [ ] Live data through TanStack Query
-- [ ] At least 2 screens with Expo Router
-- [ ] Something in SQLite that survives a restart
-- [ ] Loading and error state on every load
-- [ ] One native feature: Share, in the ⋮ menu on each Pokémon card
-- [ ] TypeScript and ESLint without errors
-- [ ] UI, data and logic in separate files
+- [x] Runs in Expo Go
+- [x] Live data through TanStack Query
+- [x] At least 2 screens with Expo Router
+- [x] Something in SQLite that survives a restart
+- [x] Loading and error state on every load
+- [x] One native feature: Share, in the ⋮ menu on each Pokémon card
+- [x] TypeScript and ESLint without errors
+- [x] UI, data and logic in separate files
 
 ## Optional
 
-- [ ] Pagination: page by page while you scroll, not all at once
-- [ ] Clean TypeScript: no `any`, no `as` casts, no `@ts-ignore`
+- [x] Pagination: page by page while you scroll, not all at once
+- [x] Clean TypeScript: no `any`, no `as` casts, no `@ts-ignore`
 - [ ] Design: pixel perfect to the Figma
 - [ ] Dark mode: every screen looks right, all colours from the theme
 

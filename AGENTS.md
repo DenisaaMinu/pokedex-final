@@ -69,6 +69,7 @@ A screen renders, a hook gets data, a service talks to the API or the database. 
 - Lists that can be tapped while the keyboard is open use `keyboardShouldPersistTaps="handled"`, so one tap is enough. Search fields turn off `autoCorrect` and `autoCapitalize`.
 - Before you reuse an image from `assets/`, open it and check it shows what the spec asks for (the old `home.png` is a house, not a Pokéball).
 - When you save a Pokémon somewhere, save the same fields the list uses (`spriteUrl`, not `artworkUrl`), so it looks the same everywhere.
+- A bar and the track behind it must use different theme colours (`detailSilver` and `detailStatTrack` are the same), or the bar is invisible.
 - Never add a package without asking me first, also not for fonts.
 - Never force-push. My git history is part of my hand-in.
 
