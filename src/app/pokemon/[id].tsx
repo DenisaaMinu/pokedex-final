@@ -11,7 +11,7 @@ import { PokemonEvolution } from '@/components/pokemon-evolution';
 import { PokemonStatRow } from '@/components/pokemon-stat-row';
 import { PokemonTypeChip } from '@/components/pokemon-type-chip';
 import { ThemedText } from '@/components/themed-text';
-import { RubikFonts, Spacing } from '@/constants/theme';
+import { Radius, RubikFonts, Spacing } from '@/constants/theme';
 import { useAddFavorite, useIsFavorite, useRemoveFavorite } from '@/hooks/use-favorites';
 import { usePokemon } from '@/hooks/use-pokemon';
 import { useTheme } from '@/hooks/use-theme';
@@ -121,6 +121,19 @@ export default function PokemonDetailScreen() {
                   {data.stats.map((stat) => (
                     <PokemonStatRow key={stat.name} stat={stat} />
                   ))}
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => {
+                      router.push({
+                        pathname: '/compare-pick',
+                        params: { first: String(data.id) },
+                      });
+                    }}
+                    style={[styles.compareButton, { backgroundColor: theme.purple, borderRadius: Radius.s }]}>
+                    <ThemedText style={[styles.compareButtonText, { color: theme.badgeText }]}>
+                      Compare with another Pokémon
+                    </ThemedText>
+                  </Pressable>
                 </View>
               ) : null}
               {activeTab === 'Evolution' ? <PokemonEvolution pokemon={data} /> : null}
@@ -217,5 +230,17 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.four,
     paddingBottom: Spacing.five,
     gap: Spacing.three,
+  },
+  compareButton: {
+    minHeight: Spacing.five,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Spacing.three,
+  },
+  compareButtonText: {
+    fontFamily: RubikFonts.medium,
+    fontSize: 16,
+    lineHeight: 20,
+    textAlign: 'center',
   },
 });
