@@ -175,6 +175,10 @@ export const Spacing = {
   detailHeroHeight: 440,
   detailArtworkSize: 240,
   detailArtworkTop: 210,
+  evolutionCardWidth: 112,
+  evolutionCardHeight: 128,
+  evolutionSpriteSize: 56,
+  evolutionDotSize: 4,
 } as const;
 
 export const Radius = {

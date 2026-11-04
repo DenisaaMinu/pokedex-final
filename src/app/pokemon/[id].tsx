@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ErrorView from '@/components/error-view';
 import { PokemonAbout } from '@/components/pokemon-about';
 import { PokemonDetailTabs, type PokemonDetailTab } from '@/components/pokemon-detail-tabs';
+import { PokemonEvolution } from '@/components/pokemon-evolution';
 import { PokemonStatRow } from '@/components/pokemon-stat-row';
 import { PokemonTypeChip } from '@/components/pokemon-type-chip';
 import { ThemedText } from '@/components/themed-text';
@@ -122,6 +123,7 @@ export default function PokemonDetailScreen() {
                   ))}
                 </View>
               ) : null}
+              {activeTab === 'Evolution' ? <PokemonEvolution pokemon={data} /> : null}
             </View>
           </ScrollView>
         )}

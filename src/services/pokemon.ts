@@ -1,4 +1,5 @@
 const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon';
+const EVOLUTION_CHAIN_API_URL = 'https://pokeapi.co/api/v2/evolution-chain';
 const POKEMON_SPRITE_URL =
   'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
 const POKEMON_OFFICIAL_ARTWORK_URL = `${POKEMON_SPRITE_URL}/other/official-artwork`;
@@ -29,6 +30,7 @@ export type PokemonDetail = {
   id: number;
   name: string;
   spriteUrl: string;
+  speciesUrl: string;
   artworkUrl: string;
   baseExperience: number | null;
   heightM: number;
@@ -43,8 +45,16 @@ export type PokemonStat = {
   value: number;
 };
 
+export type PokemonSpecies = {
+  chainId: number;
+};
+
 type PokemonApiResource = {
   name: string;
+  url: string;
+};
+
+type PokemonApiUrl = {
   url: string;
 };
 
@@ -66,6 +76,7 @@ type PokemonApiStat = {
 type PokemonDetailResponse = {
   id: number;
   name: string;
+  species: PokemonApiResource;
   base_experience: number | null;
   height: number;
   weight: number;
@@ -79,6 +90,19 @@ type PokemonDetailResponse = {
       };
     };
   };
+};
+
+type PokemonSpeciesResponse = {
+  evolution_chain: PokemonApiUrl;
+};
+
+type PokemonEvolutionChainNode = {
+  species: PokemonApiResource;
+  evolves_to: PokemonEvolutionChainNode[];
+};
+
+type PokemonEvolutionChainResponse = {
+  chain: PokemonEvolutionChainNode;
 };
 
 // Check the shape of API data instead of trusting it with an `as` cast
@@ -117,6 +141,10 @@ function isPokemonApiResource(value: unknown): value is PokemonApiResource {
   );
 }
 
+function isPokemonApiUrl(value: unknown): value is PokemonApiUrl {
+  return isRecord(value) && typeof value.url === 'string';
+}
+
 function isPokemonApiType(value: unknown): value is PokemonApiType {
   return (
     isRecord(value) &&
@@ -141,12 +169,32 @@ function isPokemonApiStat(value: unknown): value is PokemonApiStat {
   );
 }
 
+function isPokemonSpeciesResponse(value: unknown): value is PokemonSpeciesResponse {
+  return isRecord(value) && isPokemonApiUrl(value.evolution_chain);
+}
+
+function isPokemonEvolutionChainNode(value: unknown): value is PokemonEvolutionChainNode {
+  return (
+    isRecord(value) &&
+    isPokemonApiResource(value.species) &&
+    Array.isArray(value.evolves_to) &&
+    value.evolves_to.every(isPokemonEvolutionChainNode)
+  );
+}
+
+function isPokemonEvolutionChainResponse(
+  value: unknown
+): value is PokemonEvolutionChainResponse {
+  return isRecord(value) && isPokemonEvolutionChainNode(value.chain);
+}
+
 function isPokemonDetailResponse(value: unknown): value is PokemonDetailResponse {
   // Validate nested API data before reading it in the screen.
   if (
     !isRecord(value) ||
     typeof value.id !== 'number' ||
     typeof value.name !== 'string' ||
+    !isPokemonApiResource(value.species) ||
     !(typeof value.base_experience === 'number' || value.base_experience === null) ||
     typeof value.height !== 'number' ||
     typeof value.weight !== 'number' ||
@@ -180,6 +228,28 @@ function getPokemonId(url: string) {
   return id;
 }
 
+function getPokemonSpeciesId(url: string) {
+  const match = url.match(/\/pokemon-species\/(\d+)\/?$/);
+  const id = match ? Number(match[1]) : Number.NaN;
+
+  if (!Number.isSafeInteger(id) || id < 1) {
+    throw new Error(`Unable to determine a Pokémon species number from "${url}".`);
+  }
+
+  return id;
+}
+
+function getEvolutionChainId(url: string) {
+  const match = url.match(/\/evolution-chain\/(\d+)\/?$/);
+  const id = match ? Number(match[1]) : Number.NaN;
+
+  if (!Number.isSafeInteger(id) || id < 1) {
+    throw new Error(`Unable to determine an evolution chain number from "${url}".`);
+  }
+
+  return id;
+}
+
 function toDisplayName(value: string) {
   return value
     .split('-')
@@ -208,6 +278,7 @@ function toPokemonDetail(response: PokemonDetailResponse): PokemonDetail {
     id: response.id,
     name: toDisplayName(response.name),
     spriteUrl: `${POKEMON_SPRITE_URL}/${response.id}.png`,
+    speciesUrl: response.species.url,
     artworkUrl:
       response.sprites.other['official-artwork'].front_default ??
       `${POKEMON_OFFICIAL_ARTWORK_URL}/${response.id}.png`,
@@ -288,4 +359,68 @@ export async function getPokemonDetail(id: number): Promise<PokemonDetail> {
   }
 
   return toPokemonDetail(body);
+}
+
+export async function getPokemonSpecies(speciesUrl: string): Promise<PokemonSpecies> {
+  getPokemonSpeciesId(speciesUrl);
+
+  const response = await fetch(speciesUrl);
+
+  if (!response.ok) {
+    throw new Error(`Unable to load Pokémon species (${response.status}).`);
+  }
+
+  const body: unknown = await response.json();
+
+  if (!isPokemonSpeciesResponse(body)) {
+    throw new Error('The Pokémon species response was invalid.');
+  }
+
+  return { chainId: getEvolutionChainId(body.evolution_chain.url) };
+}
+
+export async function getPokemonEvolutionChain(chainId: number): Promise<Pokemon[]> {
+  if (!Number.isSafeInteger(chainId) || chainId < 1) {
+    throw new Error('Unable to load the evolution chain: the number is invalid.');
+  }
+
+  const response = await fetch(`${EVOLUTION_CHAIN_API_URL}/${chainId}`);
+
+  if (!response.ok) {
+    throw new Error(`Unable to load the evolution chain (${response.status}).`);
+  }
+
+  const body: unknown = await response.json();
+
+  if (!isPokemonEvolutionChainResponse(body)) {
+    throw new Error('The evolution chain response was invalid.');
+  }
+
+  const stages: Pokemon[][] = [];
+
+  function collectStage(nodes: PokemonEvolutionChainNode[]) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    stages.push(
+      nodes
+        .map(({ species }) => {
+          const id = getPokemonSpeciesId(species.url);
+
+          return {
+            id,
+            name: toDisplayName(species.name),
+            spriteUrl: `${POKEMON_SPRITE_URL}/${id}.png`,
+          };
+        })
+        .sort((first, second) => first.id - second.id)
+    );
+
+    collectStage(nodes.flatMap(({ evolves_to }) => evolves_to));
+  }
+
+  collectStage([body.chain]);
+
+  return stages.flat();
 }
